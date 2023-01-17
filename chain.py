@@ -16,7 +16,7 @@ def check_for_file():
     else:
         print("Error, 'habits.csv' not found. Creating file now.")
         with open('habits.csv', 'w') as creating_new_file:
-            creating_new_file.write('HABIT,DATE,CHAINS,RECORD')
+            creating_new_file.write('HABIT,DATE,CHAINS,RECORD\n')
         return False
 
 def read_habits():
@@ -46,7 +46,7 @@ def create_new_habit(habit_name):
     # with open(HABITS_FILE, 'r') as csvfile:
     #     num_of_entries = len(csvfile.readlines())
 
-    habit = f"\n{habit_name},0,0,0\n"
+    habit = f"{habit_name},0,0,0\n"
 
     with open(HABITS_FILE, 'a') as csvfile:
         csvfile.write(habit)
