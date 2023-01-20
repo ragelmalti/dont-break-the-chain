@@ -19,7 +19,14 @@ def check_for_file():
             creating_new_file.write('HABIT,DATE,CHAINS,RECORD\n')
         return False
 
-def read_habits():
+def print_habit(csv, index):
+    print(f"{index + 1}. {csv['HABIT'][index]} | Record: {csv['RECORD'][index]}")
+    print(f"({csv['CHAINS'][index]})", end=" ")
+    print(int(csv['CHAINS'][index]) * "*")
+    print()
+
+
+def read_all_habits():
     df = pd.read_csv(HABITS_FILE)
     rows = df.shape[0]
     if rows == 0:
@@ -35,11 +42,31 @@ def read_habits():
                 if delta.days >= 2:
                     reset_chain(index, False)
                     df = pd.read_csv(HABITS_FILE)
+            print_habit(df, index)
 
-            print(f"{index + 1}. {df['HABIT'][index]} | Record: {df['RECORD'][index]}")
-            print(f"({df['CHAINS'][index]})", end=" ")
-            print(int(df['CHAINS'][index]) * "*")
-            print()
+def read_filtered(complete: bool):
+    # Prints all the habits that you have completed, or not completed.
+    # 'complete' variable, determines which option to filter by.
+    df = pd.read_csv(HABITS_FILE)
+    rows = df.shape[0]
+    today = str(date.today())
+    if rows == 0:
+        print("Error, no habits found")
+        return
+    else:
+        for index in df.index:
+            dt = str(df['DATE'][index])
+            if dt != "0":
+                comparison_dt = datetime.strptime(dt, "%Y-%m-%d")
+                today_dt = datetime.combine(date.today(), datetime.min.time())
+                delta = today_dt - comparison_dt
+                if delta.days >= 2:
+                    reset_chain(index, False)
+                    df = pd.read_csv(HABITS_FILE)
+            if dt != today and complete == False:
+                print_habit(df, index)
+            elif dt == today and complete == True:
+                print_habit(df, index)
 
 def create_new_habit(habit_name):
     # num_of_entries = 0
@@ -121,10 +148,14 @@ def check_date(habit_number : int):
 
 def main():
     if len(sys.argv) == 1:
-        read_habits()
+        read_filtered(False)
     elif len(sys.argv) >= 2:
-        if sys.argv[1] == "list":
-            read_habits()
+        if sys.argv[1] == "all":
+            read_all_habits()
+        elif sys.argv[1] == "todo":
+            read_filtered(False)
+        elif sys.argv[1] == "complete":
+            read_filtered(True)
         elif sys.argv[1] == "new" and len(sys.argv) == 3:
             create_new_habit(sys.argv[2])
         elif sys.argv[1] == "add" and len(sys.argv) == 3:
