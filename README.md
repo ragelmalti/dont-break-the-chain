@@ -17,10 +17,14 @@ Don't break the chain, works by keeping track of habits in a CSV file called 'ha
 
 When you first run the script, it checks if the CSV file 'habits.csv' is in your working directory. If not, then the script will automatically create one for you.
 
-There are 4 commands:
+Running the script with no arguments, is equivalent to running the command `chain todo.`
+
+There are 6 commands:
 - `chain new [habit-name]` Creates a new habit 
-- `chain list` Lists all the habits you currently have, in numerical order from when you created them.`
+- `chain all` Lists all the habits you currently have, in numerical order from when you created them.`
   - Automatically resets a habit back to zero, if the chain is broken.
+- `chain todo` Lists all the habits that are incomplete for today.
+- `chain complete` Lists all the habits that you've completed for today.
 - `chain delete [habit-number]` Deletes a habit. Referenced by it's numerical order in the list.
 - `chain add [habit-number]` Adds a new chain to the habit. Referenced by it's numerical order in the list.
   - Will not add a new chain, if a chain was already added on the current day of running the script.
